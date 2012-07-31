@@ -5,8 +5,9 @@ class Youtube
                 :view_count,
                 :openURI_options
 
-  def initialize(url, options = {})
+  def initialize(url, options = {}, get_params = '')
     @openURI_options = options
+		@get_params = get_params
     video_id_for(url)
     get_info unless @video_id == url || @video_id.nil? || @video_id.empty?
   end
@@ -28,9 +29,9 @@ private
       doc = Hpricot(open("http://gdata.youtube.com/feeds/api/videos/#{@video_id}", @openURI_options))
       @provider         = "YouTube"
       @url              = "http://www.youtube.com/watch?v=#{@video_id}"
-      @embed_url        = "http://www.youtube.com/embed/#{@video_id}"
+      @embed_url        = "http://www.youtube.com/embed/#{@video_id}#{param_string}"
       @embed_code       = "<iframe src=\"#{@embed_url}\" frameborder=\"0\" allowfullscreen=\"allowfullscreen\"></iframe>"
-      @title            = doc.search("media:title").inner_text
+      @title            = doc.search("media:title").inner_text#{param_stringo
       @description      = doc.search("media:description").inner_text
       @keywords         = doc.search("media:keywords").inner_text
       @duration         = doc.search("yt:duration").first[:seconds].to_i
@@ -48,5 +49,9 @@ private
       nil
     end
   end
+
+	def param_string
+		@get_params.empty? ? '' : '?' + @get_params	
+	end
 
 end

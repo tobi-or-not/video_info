@@ -6,7 +6,7 @@ require 'provider/youtube'
 
 class VideoInfo
 
-  def initialize(url, options = {})
+  def initialize(url, options = {}, get_params = '')
 
     options = { "User-Agent" => "VideoInfo/#{VideoInfoVersion::VERSION}" }.merge options
     options.dup.each do |key,value|
@@ -22,9 +22,9 @@ class VideoInfo
     when /vimeo\.com/
       @video = Vimeo.new(url, options)
     when /youtube\.com/
-      @video = Youtube.new(url, options)
+      @video = Youtube.new(url, options, get_params)
     when /youtu\.be/
-      @video = Youtube.new(url, options)
+      @video = Youtube.new(url, options, get_params)
     end
   end
 
